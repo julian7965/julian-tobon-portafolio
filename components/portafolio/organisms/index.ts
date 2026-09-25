@@ -1,0 +1,11 @@
+/** Organismos: secciones completas de la página construidas con moléculas y átomos. */
+export { EducationSection } from './EducationSection'
+export { HeroSection } from './HeroSection'
+export { KnowledgeSection } from './KnowledgeSection'
+export { MobileTopBar } from './MobileTopBar'
+export { PortfolioSection } from './PortfolioSection'
+export { ProfileDialog } from './ProfileDialog'
+export { ProfileSidebar } from './ProfileSidebar'
+export { ProjectDialog } from './ProjectDialog'
+export { SiteFooter } from './SiteFooter'
+export { SocialSidebar } from './SocialSidebar'
