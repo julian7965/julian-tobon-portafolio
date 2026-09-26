@@ -109,8 +109,8 @@ export function LoginForm({ configured }: LoginFormProps) {
             </form>
           ) : (
             <p className="mt-6 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800" role="alert">
-              El editor no está configurado: faltan las variables de entorno NEXT_PUBLIC_SUPABASE_URL y
-              NEXT_PUBLIC_SUPABASE_ANON_KEY.
+              El editor no está configurado: agrega las variables NEXT_PUBLIC_SUPABASE_URL y
+              NEXT_PUBLIC_SUPABASE_ANON_KEY en Vercel (o en .env.local) y vuelve a desplegar el sitio.
             </p>
           )}
         </div>

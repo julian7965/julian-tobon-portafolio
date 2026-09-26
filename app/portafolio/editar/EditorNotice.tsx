@@ -2,7 +2,7 @@ import { Button, Icon } from '@/components/portafolio/atoms'
 import { SignOutButton } from './SignOutButton'
 
 interface EditorNoticeProps {
-  kind: 'forbidden' | 'setup'
+  kind: 'forbidden' | 'setup' | 'env'
   email?: string
   /** Detalle técnico del error (solo para configuración). */
   detail?: string
@@ -19,9 +19,13 @@ const COPY = {
     title: 'Falta configurar la base de datos',
     text: 'Ejecuta el script supabase/portafolio_cv.sql en el SQL Editor de Supabase y vuelve a cargar esta página.',
   },
+  env: {
+    title: 'Faltan las variables de Supabase',
+    text: 'Agrega NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY en Vercel (Settings → Environment Variables) o en el archivo .env.local, y vuelve a desplegar el sitio.',
+  },
 } as const
 
-/** Aviso a pantalla completa cuando el editor no se puede usar (cuenta sin permiso o base de datos sin configurar). */
+/** Aviso a pantalla completa cuando el editor no se puede usar (cuenta sin permiso, base de datos o variables sin configurar). */
 export function EditorNotice({ kind, email, detail, showSignOut = true }: EditorNoticeProps) {
   const copy = COPY[kind]
   // Correo escapado para mostrarlo dentro de la instrucción SQL.

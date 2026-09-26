@@ -24,13 +24,7 @@ export const metadata: Metadata = {
  */
 export default async function EditCvPage() {
   if (!isSupabaseConfigured) {
-    return (
-      <EditorNotice
-        kind="setup"
-        detail="Faltan las variables de entorno NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY."
-        showSignOut={false}
-      />
-    )
+    return <EditorNotice kind="env" showSignOut={false} />
   }
 
   const supabase = createServerComponentClient({ cookies })
