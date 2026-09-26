@@ -3,7 +3,7 @@
 Proyecto evaluativo 1 de **Ingeniería Web** (profesor Juan Pablo Arango): hoja de vida personal construida con **Next.js, React, TypeScript y Tailwind CSS**, maquetada a partir del diseño de Figma entregado en clase y desplegada en **Vercel**.
 
 - **Sitio en producción:** [julian-tobon.vercel.app](https://julian-tobon.vercel.app)
-- **Repositorio:** `julian-tobon-portafolio` (organización de la clase)
+- **Repositorio:** [github.com/julian7965/julian-tobon-portafolio](https://github.com/julian7965/julian-tobon-portafolio)
 
 ---
 
@@ -83,7 +83,7 @@ npm run dev
 Todo el CV se edita desde la propia aplicación, sin tocar código:
 
 1. Ejecuta una vez [`supabase/portafolio_cv.sql`](supabase/portafolio_cv.sql) en Supabase (ver la sección siguiente).
-2. Si aún no tienes cuenta, créala en Supabase → **Authentication** → **Users** → **Add user** (correo y contraseña).
+2. Si aún no tienes cuenta, créala en `/login` → **Crear cuenta** (correo y contraseña). Si Supabase pide confirmar el correo, abre el enlace que llega por email. También puedes crearla en Supabase → **Authentication** → **Users** → **Add user**.
 3. Autoriza ese correo en el **SQL Editor**:
    ```sql
    insert into public.cv_editores (email) values ('tu-correo@ejemplo.com');
@@ -102,7 +102,8 @@ Todo el CV se edita desde la propia aplicación, sin tocar código:
 
 - `middleware.ts` exige sesión para `/portafolio/editar` (sin sesión, redirige a `/login`), y la página confirma el permiso con la función SQL `cv_puede_editar()`, que revisa la tabla `cv_editores`.
 - Al guardar, una acción del servidor valida todo con zod (textos obligatorios, límites, URLs seguras) y llama a la función `cv_guardar()`, que vuelve a verificar el permiso y guarda **todo en una sola transacción**.
-- Los visitantes pueden ver el botón **Editar**, pero solo llegan al inicio de sesión: no pueden leer ni cambiar nada que no sea público.
+- Los visitantes pueden ver el botón **Editar** y crear una cuenta, pero registrarse **no** da permiso de edición: sin su correo en `cv_editores` no pueden leer ni cambiar nada que no sea público.
+- Para que el enlace de confirmación del correo vuelva al sitio, agrega `https://tu-dominio/auth/callback` en Supabase → **Authentication** → **URL Configuration** → **Redirect URLs**.
 - Si inicias sesión con un correo no autorizado, el editor muestra la instrucción SQL exacta para autorizarlo.
 
 ## Contenido en Supabase
@@ -130,7 +131,8 @@ Marcadores del contenido inicial que conviene reemplazar desde el editor:
 ```
 app/
 ├── page.tsx                  → Página "/" del portafolio (Server Component + ISR)
-├── login/                    → Inicio de sesión del editor: page.tsx y LoginForm.tsx
+├── login/                    → Inicio de sesión y registro del editor: page.tsx y LoginForm.tsx
+├── auth/callback/route.ts    → Destino del enlace de confirmación del correo
 ├── portafolio/editar/        → Editor del CV: page.tsx (servidor), CvEditor.tsx (cliente),
 │                               actions.ts (guardar), EditorNotice.tsx, SignOutButton.tsx
 ├── layout.tsx                → Layout raíz (tipografía Inter)
@@ -191,12 +193,13 @@ supabase/portafolio_cv.sql    → Tablas, RLS, funciones, bucket de Storage y da
 | Ruta | Acceso | Descripción |
 | --- | --- | --- |
 | `/` | Público | Portafolio / hoja de vida. |
-| `/login` | Público | Inicio de sesión del editor (con sesión activa, lleva directo al editor). |
+| `/login` | Público | Inicio de sesión y registro del editor (con sesión activa, lleva directo al editor). |
+| `/auth/callback` | Público | Confirma el correo de una cuenta nueva y abre el editor. |
 | `/portafolio/editar` | Correos autorizados | Editor de la hoja de vida. |
 
 ## Despliegue en Vercel
 
-1. Sube el código al repositorio `julian-tobon-portafolio` de la organización de la clase.
+1. Sube el código al repositorio [julian7965/julian-tobon-portafolio](https://github.com/julian7965/julian-tobon-portafolio).
 2. En Vercel: **Add New → Project** e importa el repositorio. En **Project Name** escribe `julian-tobon` para obtener el dominio `julian-tobon.vercel.app` (o agrégalo luego en **Settings → Domains**).
 3. En **Environment Variables** agrega `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 4. Pulsa **Deploy**. Cada `push` a `main` genera un nuevo despliegue automáticamente.
